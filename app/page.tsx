@@ -9,7 +9,7 @@ import { Send } from '@mui/icons-material';
 // import { GoogleAuth } from "google-auth-library";
 const Home = () => {
   const [query, setQuery] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([{ text: 'Hi! How can I assist you today? ✨', user: 'Bard'}]);
   const [text, setText] = useState('');
   const originalText= "Hello, I am Bard, your programming assistant. I can help you with your programming queries.";
   const chat=[];
