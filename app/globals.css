@@ -25,3 +25,23 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+.typing-animation {
+  display: inline-block;
+  border-right: 0.1em solid #000; /* Simulates the typing cursor */
+  padding-right: 5px; /* Adjust spacing between text and cursor */
+  white-space: nowrap; /* Ensures the text remains in a single line */
+  overflow: hidden; /* Hides overflowing text */
+}
+
+.typing-animation span {
+  animation: typing-animation 1s steps(40, end);
+}
+
+@keyframes typing-animation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
