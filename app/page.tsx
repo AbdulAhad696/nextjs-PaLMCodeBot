@@ -7,16 +7,36 @@ import { Send } from '@mui/icons-material';
 // import { DiscussServiceClient } from "@google-ai/generativelanguage";
 
 // import { GoogleAuth } from "google-auth-library";
+import { CodeGPTPlus } from 'judini';
+
+
 const Home = () => {
   const [query, setQuery] = useState("");
-  const [messages, setMessages] = useState([{ text: 'Hi! How can I assist you today? ✨', user: 'Bard'}]);
+  const [messages, setMessages] = useState([{ text: 'Hi! How can I assist you today? ✨', user: 'CodeGPT'}]);
   const [text, setText] = useState('');
-  const originalText= "Hello, I am Bard, your programming assistant. I can help you with your programming queries.";
+  const originalText= "Hello, I am CodeGPT, your programming assistant. I can help you with your programming queries.";
   const chat=[];
   const bottomRef = useRef<HTMLDivElement>(null);
   
   const API_KEY = "AIzaSyDPeP5nqXqDtS3bOCxWT6dYn8t-Sgpmeos";
-  
+  async function processQuery (query:string) {
+    let bardResponse="";
+    // Replace with your own API Key
+    const codegpt = new CodeGPTPlus('17ca2a42-a22c-4b3e-a09a-dd7332cb71bc')
+
+    // Define the message
+    const msg = [{ role: 'user', content: query }]
+
+    // Send the message and process the response
+    const res = await codegpt.chatCompletion({
+        messages: msg,
+        agentId: 'aeed36da-cd9c-4ae0-a870-5cab5e02e817'
+    }, (chunk: string) => {
+      bardResponse+=chunk;
+        // console.log(chunk) // show the streaming response
+    })
+    setMessages((messages) => [...messages, { text: bardResponse ?? '', user: 'Bard' }]);
+}
   useEffect(() => {
     let index = 0;
     const intervalId = setInterval(() => {
@@ -47,7 +67,8 @@ const Home = () => {
   //   authClient: new GoogleAuth().fromAPIKey(API_KEY),
   // });
 
-  const processQuery=async (query:string)=> {
+  // const processQuery=async (query:string)=> {
+    // main();
     // chat.push({content:query});
     // const result = await client.generateMessage({
     //   model: MODEL_NAME, // Required. The model to use to generate the result.
@@ -84,7 +105,7 @@ const Home = () => {
 
     // console.log("worked");
     // setMessages((messages) => [...messages, { text: result?.[0]?.candidates?.[0]?.content ?? '', user: 'Bard' }]);
-  }
+  // }
   
   const handleQueryChange = (event: { target: { value: string; }; }) => {
     setQuery(() => event.target.value);
@@ -126,10 +147,10 @@ const Home = () => {
             >
               Powered By{' '}
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="PaLM Logo"
                 className="dark:invert"
-                width={75}
+                width={50}
                 height={16}
                 priority
               />
