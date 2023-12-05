@@ -4,9 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import { Grid, IconButton } from '@mui/material';
 import { Send } from '@mui/icons-material';
-// import { DiscussServiceClient } from "@google-ai/generativelanguage";
-
-// import { GoogleAuth } from "google-auth-library";
 import { CodeGPTPlus } from 'judini';
 
 
@@ -17,11 +14,10 @@ const Home = () => {
   const originalText= "Hello, I am CodeGPT, your programming assistant. I can help you with your programming queries.";
   const chat=[];
   const bottomRef = useRef<HTMLDivElement>(null);
-  
-  const API_KEY = "AIzaSyDPeP5nqXqDtS3bOCxWT6dYn8t-Sgpmeos";
+
   async function processQuery (query:string) {
-    let bardResponse="";
-    // Replace with your own API Key
+    let GPTResponse="";
+
     const codegpt = new CodeGPTPlus('17ca2a42-a22c-4b3e-a09a-dd7332cb71bc')
 
     // Define the message
@@ -32,10 +28,13 @@ const Home = () => {
         messages: msg,
         agentId: 'aeed36da-cd9c-4ae0-a870-5cab5e02e817'
     }, (chunk: string) => {
-      bardResponse+=chunk;
-        // console.log(chunk) // show the streaming response
+      
+      if (chunk === '```' || chunk ===':'){
+        GPTResponse+='\n'
+      }
+      GPTResponse+=chunk;
     })
-    setMessages((messages) => [...messages, { text: bardResponse ?? '', user: 'Bard' }]);
+    setMessages((messages) => [...messages, { text: GPTResponse ?? '', user: 'CodeGPT' }]);
 }
   useEffect(() => {
     let index = 0;
@@ -46,66 +45,18 @@ const Home = () => {
       } else {
         clearInterval(intervalId);
       }
-    }, 100); // Adjust the speed of typing by changing the interval duration (in milliseconds)
+    }, 100); 
     
     return () => {
-      clearInterval(intervalId); // Clear the interval on component unmount
+      clearInterval(intervalId);
     };
   }, [originalText]);
 
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-      // Change the behavior to 'auto' if you prefer an immediate scroll without smooth animation.
-      // bottomRef.current.scrollIntoView({ behavior: 'auto' });
     }
   }, [messages]);
-
-  const MODEL_NAME = "models/chat-bison-001";
-
-  // const client = new DiscussServiceClient({
-  //   authClient: new GoogleAuth().fromAPIKey(API_KEY),
-  // });
-
-  // const processQuery=async (query:string)=> {
-    // main();
-    // chat.push({content:query});
-    // const result = await client.generateMessage({
-    //   model: MODEL_NAME, // Required. The model to use to generate the result.
-    //   temperature: 0.1, // Optional. Value `0.0` always uses the highest-probability result.
-    //   candidateCount: 1, // Optional. The number of candidate results to generate.
-    //   prompt: {
-    //     // optional, preamble context to prime responses
-    //     context: "You are a programming assistant only.",
-    //     // Optional. Examples for further fine-tuning of responses.
-    //     examples: [
-    //       {
-    //         input: { content: "Write a program for factorial using recursion in python" },
-    //         output: {
-    //           content:
-    //             `Sure, here are examples of factorial calculation using both recursion and iteration (without recursion) in Python:
-    //             def factorial_recursive(n):
-    //               if n == 0 or n == 1:
-    //                   return 1
-    //               else:
-    //                   return n * factorial_recursive(n - 1)
-
-    //             # Example usage:
-    //             number = 5
-    //             result_recursive = factorial_recursive(number)
-    //             print(f"The factorial of {number} using recursion is: {result_recursive}")
-    //             The recursive approach involves calling the function within itself until it reaches the base case (n = 0 or n = 1)`,
-    //         },
-    //       },
-    //     ],
-    //     // Required. Alternating prompt/response messages.
-    //     messages: [{ content: query }],
-    //   },
-    // });
-
-    // console.log("worked");
-    // setMessages((messages) => [...messages, { text: result?.[0]?.candidates?.[0]?.content ?? '', user: 'Bard' }]);
-  // }
   
   const handleQueryChange = (event: { target: { value: string; }; }) => {
     setQuery(() => event.target.value);
