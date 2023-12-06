@@ -8,13 +8,14 @@ import { CodeGPTPlus } from 'judini';
 
 
 const Home = () => {
-  const [query, setQuery] = useState("");
-  const [messages, setMessages] = useState([{ text: 'Hi! How can I assist you today? ✨', user: 'CodeGPT'}]);
-  const [text, setText] = useState('');
-  const originalText= "Hello, I am CodeGPT, your programming assistant. I can help you with your programming queries.";
-  const chat=[];
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [query, setQuery] = useState(""); // defining a state variable to change the query in the textfield
+  const [messages, setMessages] = useState([{ text: 'Hi! How can I assist you today? ✨', user: 'CodeGPT'}]); // a state variable to append the conversation into
+  const [text, setText] = useState(''); // state variable to print a dynamic line on top of the UI
+  const originalText= "Hello, I am CodeGPT, your programming assistant. I can help you with your programming queries."; // a static line printed on top of UI
 
+  const bottomRef = useRef<HTMLDivElement>(null); // reference hook to refer to an html div for scrolling to bottom of page when new message is appended to the conversation card
+
+  // async function that sends a request to the GPT API and sets state for the messages array
   async function processQuery (query:string) {
     let GPTResponse="";
 
@@ -36,6 +37,7 @@ const Home = () => {
     })
     setMessages((messages) => [...messages, { text: GPTResponse ?? '', user: 'CodeGPT' }]);
 }
+  // a function to run only once because originalText does not changes. To print a static line on top of UI when web page is first loaded 
   useEffect(() => {
     let index = 0;
     const intervalId = setInterval(() => {
@@ -52,15 +54,18 @@ const Home = () => {
     };
   }, [originalText]);
 
+  // when the messages array is updated, a hook that runs to scroll the web page to the bottom using the bottom variable using useRef hook
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
   
+  // to detect the change in textfield and to reflect the change with two way binding
   const handleQueryChange = (event: { target: { value: string; }; }) => {
     setQuery(() => event.target.value);
   }
+  // to handle query submission when enter is pressed
   const handleSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && query !== "") {
       setMessages((messages) => [...messages, { text: query, user: 'You' }]);
@@ -68,6 +73,7 @@ const Home = () => {
       processQuery(query);
     }
   }
+  // to submit query submission when submit button is clicked 
   const handleClick = () => {
     if (query !== "") {
       setMessages((messages) => [...messages, { text: query, user: 'You' }]);
@@ -77,6 +83,7 @@ const Home = () => {
 
   }
 
+  // UI
   return (
     <React.Fragment>
       
