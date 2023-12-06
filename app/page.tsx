@@ -5,7 +5,8 @@ import TextField from '@mui/material/TextField';
 import { Grid, IconButton } from '@mui/material';
 import { Send } from '@mui/icons-material';
 import { CodeGPTPlus } from 'judini';
-
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 const Home = () => {
   const [query, setQuery] = useState(""); // defining a state variable to change the query in the textfield
@@ -35,7 +36,9 @@ const Home = () => {
       }
       GPTResponse+=chunk;
     })
-    setMessages((messages) => [...messages, { text: GPTResponse ?? '', user: 'CodeGPT' }]);
+
+    setMessages((messages) => [...messages,{text: (<SyntaxHighlighter language="python" style={docco}>{GPTResponse ?? ''}</SyntaxHighlighter>),user: 'CodeGPT',},]);
+    // setMessages((messages) => [...messages, { text: GPTResponse ?? '', user: 'CodeGPT' }]);
 }
   // a function to run only once because originalText does not changes. To print a static line on top of UI when web page is first loaded 
   useEffect(() => {
@@ -124,8 +127,8 @@ const Home = () => {
                 <Grid item>
                   <span className='font-bold'>{message?.user}:&nbsp;</span>
                 </Grid>
-                <Grid item>
-                  <p>{message?.text}</p>
+                <Grid item style={{ maxWidth: '100%', overflowX: 'auto' }} >
+                <div>{message?.text}</div>
                 </Grid>
               </Grid>
             ))}
