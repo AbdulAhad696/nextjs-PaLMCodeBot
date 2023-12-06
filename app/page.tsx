@@ -5,7 +5,8 @@ import TextField from '@mui/material/TextField';
 import { Grid, IconButton } from '@mui/material';
 import { Send } from '@mui/icons-material';
 import { CodeGPTPlus } from 'judini';
-
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 const Home = () => {
   const [query, setQuery] = useState("");
@@ -34,7 +35,9 @@ const Home = () => {
       }
       GPTResponse+=chunk;
     })
-    setMessages((messages) => [...messages, { text: GPTResponse ?? '', user: 'CodeGPT' }]);
+
+    setMessages((messages) => [...messages,{text: (<SyntaxHighlighter language="python" style={docco}>{GPTResponse ?? ''}</SyntaxHighlighter>),user: 'CodeGPT',},]);
+    // setMessages((messages) => [...messages, { text: GPTResponse ?? '', user: 'CodeGPT' }]);
 }
   useEffect(() => {
     let index = 0;
@@ -117,8 +120,8 @@ const Home = () => {
                 <Grid item>
                   <span className='font-bold'>{message?.user}:&nbsp;</span>
                 </Grid>
-                <Grid item>
-                  <p>{message?.text}</p>
+                <Grid item style={{ maxWidth: '100%', overflowX: 'auto' }} >
+                <div>{message?.text}</div>
                 </Grid>
               </Grid>
             ))}
