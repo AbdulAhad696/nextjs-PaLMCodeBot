@@ -20,7 +20,7 @@ const Home = () => {
   async function processQuery (query:string) {
     let GPTResponse="";
 
-    const codegpt = new CodeGPTPlus('17ca2a42-a22c-4b3e-a09a-dd7332cb71bc')
+    const codegpt = new CodeGPTPlus('0858ddc5-8f6a-42b1-a59d-3b7a022b2bc9')
 
     // Define the message
     const msg = [{ role: 'user', content: query }]
@@ -28,7 +28,7 @@ const Home = () => {
     // Send the message and process the response
     const res = await codegpt.chatCompletion({
         messages: msg,
-        agentId: 'aeed36da-cd9c-4ae0-a870-5cab5e02e817'
+        agentId: 'c5562e0e-c0b3-412c-b83a-b2ed673ca8fc'
     }, (chunk: string) => {
       
       if (chunk === '```' || chunk ===':'){
